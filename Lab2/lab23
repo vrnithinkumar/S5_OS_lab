@@ -1,0 +1,15 @@
+#! /bin/bash
+#############################################################################
+#                                                                           #
+#******This bash script is written by VR<vrnithinkumar@gmail.com>***********#
+#               copyright @ GNU GENERAL PUBLIC LICENSE                      #			
+#############################################################################
+if test $# -lt 3
+then
+echo -e "$0 : Invalid Input.....\n"
+exit 1
+fi
+
+p=`expr $3 \- $2`
+p=`expr $p \+ 1`
+head -$3 $1|tail -$p

@@ -1,0 +1,100 @@
+if(active==NULL)
+	{
+		active=cpq[enqcpu()];
+		counter=0;
+		active->val--;
+		counter++;
+		if(ioq.firstinioq()!=NULL)
+		{
+			ioq.firstinioq()->val--;
+			if(ioq.firstinioq()->val==0)
+			{
+				phed=ioq.deq();
+				if(phed!=NULL)
+				{
+					addtocpuq(phed);
+				}
+			
+		}	
+		
+			
+		
+		
+	}
+	else
+	{
+		active->val--;
+		counter++;
+		if(active->val==0)
+		{
+			cout<<active->pronum<<" "<<counter<<endl;
+			active=NULL;
+			ioq.insert(active->next);
+			
+		}
+		if(ioq.firstinioq()!=NULL)
+		{
+			ioq.firstinioq()->val--;
+		}
+		
+		
+
+		}
+
+	}
+==============================================================================================================================
+if(active==NULL)
+	{
+		//cout<<time<<endl;
+		if(!(isemptycpuq()))
+		{
+			cout<<time<<endl;
+			active=cpq[enqcpu()];
+			//cout<<cpq[0]->val;
+			counter=0;
+		//	cout<<active->val<<endl;
+			counter++;
+			
+		}
+		if(ioq.firstinioq()!=NULL)
+		{
+			ioq.firstinioq()->val--;
+			if(ioq.firstinioq()->val==0)
+			{
+				phed=ioq.deq();
+				if(phed!=NULL)
+				{
+					addtocpuq(phed);
+				}
+			}
+			cout<<"God"<<endl;	
+		}
+	}/*
+	else
+	{
+		active->val--;
+		counter++;
+		if(active->val==0)
+		{
+			cout<<active->pronum+1<<" "<<counter<<" "<<time<<endl;
+			if(active->next!=NULL)
+			{
+				ioq.insert(active->next);
+				active=NULL;
+				cout<<"cool";
+			}
+		}	
+		if(ioq.firstinioq()!=NULL)
+		{
+			ioq.firstinioq()->val--;
+			if(ioq.firstinioq()->val==0)
+			{
+				phed=ioq.deq();
+				if(phed!=NULL)
+				{
+					addtocpuq(phed);
+				}
+			}
+			
+		}
+	}*/

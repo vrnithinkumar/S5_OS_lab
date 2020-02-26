@@ -1,0 +1,2 @@
+echo " export PS1=' vrs '"
+echo " export PATH='$PATH:./:../ '"

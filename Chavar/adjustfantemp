@@ -1,0 +1,3 @@
+#! /bin/bash
+
+sudo echo ON > /sys/kernel/debug/vgaswitcheroo/switch

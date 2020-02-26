@@ -1,0 +1,12 @@
+#! /bin/bash
+#############################################################################
+#                                                                           #
+#******This bash script is written by VR<vrnithinkumar@gmail.com>***********#
+#               copyright@GNU GENERAL PUBLIC LICENSE                        #			#############################################################################
+tim=`date +"%p"`
+if test $tim \= "PM"
+then 
+	echo "------Good AfterNoon--------"
+else
+	echo "--------Good Mornig---------"
+fi

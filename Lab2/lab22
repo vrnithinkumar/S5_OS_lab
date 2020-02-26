@@ -1,0 +1,13 @@
+#! /bin/bash
+#############################################################################
+#                                                                           #
+#******This bash script is written by VR<vrnithinkumar@gmail.com>***********#
+#               copyright @ GNU GENERAL PUBLIC LICENSE                      #			
+#############################################################################
+if test $# -lt 2
+then
+echo -e "$0 : Invalid Input.....\n You must give names of two files to be compared..."
+exit 1
+fi
+diff -q $1 $2
+

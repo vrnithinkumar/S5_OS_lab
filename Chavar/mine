@@ -1,0 +1,3 @@
+#!/bin/bash
+n=`wc -l $1`
+echo $n

@@ -1,0 +1,22 @@
+#!/bin/bash
+k=`cat $3`
+s=`tail -1 iput|head -1`
+# echo ""|cat>temp
+exec <$3
+while read k
+do
+for i in $k
+do
+	if test $i \= $1
+	
+	then
+		echo -n $2|cat>>temp
+		echo -n " "|cat>>temp
+	else
+		echo -n $i|cat>>temp
+		echo -n " "|cat>>temp
+	fi
+done
+	echo |cat>>temp
+done
+mv temp $3

@@ -1,0 +1,9 @@
+#! /bin/bash
+#############################################################################
+#                                                                           #
+#******This bash script is written by VR<vrnithinkumar@gmail.com>***********#
+#               copyright@GNU GENERAL PUBLIC LICENSE                        #			
+#############################################################################
+cd $1 
+mkdir HiddenFiles
+mv .* ./HiddenFiles

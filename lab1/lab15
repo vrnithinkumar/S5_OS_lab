@@ -1,0 +1,23 @@
+#! /bin/bash
+#############################################################################
+#                                                                           #
+#******This bash script is written by VR<vrnithinkumar@gmail.com>***********#
+#               copyright @ GNU GENERAL PUBLIC LICENSE                      #			#############################################################################
+if [ $# -lt 3 ]
+then
+echo -e "$0 : Invalid Input.....\nEnter Input in the order Word_1,Word_2,Filename.."
+exit 1
+fi
+Old_word=$1
+New_word=$2
+File_name=$3
+if test -f $File_name
+then
+	echo "File exists"
+else 
+echo "No Such file exists...."
+exit 1
+fi  
+sed -e "s/$Old_word/$New_word/g" $File_name > temp
+mv temp $File_name
+echo "Successfully $Old_word is replaced by $New_word"  

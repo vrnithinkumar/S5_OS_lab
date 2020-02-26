@@ -1,0 +1,14 @@
+#/bin/bash
+
+function fact(){
+n=$1
+if test $n -lt 2
+then
+	return $n
+else 
+	$n=$n-1
+	return fact $n
+
+fi
+}
+fact $1

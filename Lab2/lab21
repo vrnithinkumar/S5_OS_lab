@@ -1,0 +1,17 @@
+#!/bin/bash
+#############################################################################
+#                                                                           #
+#******This bash script is written by VR<vrnithinkumar@gmail.com>***********#
+#               copyright @ GNU GENERAL PUBLIC LICENSE                      #			
+#############################################################################
+if test $# -lt 1
+then
+echo -e "$0 : Invalid Input.....\n Enter a number....."
+exit 1
+fi
+n=`expr $1 \% 2`
+if test $n -eq 0
+then
+	echo "--------$1 is Even-------"
+else echo "---------$1 is Odd-------"
+fi	

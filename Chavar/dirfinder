@@ -1,0 +1,19 @@
+#!/bin/bash
+cd $1
+k=`ls`
+echo |cat>temp
+sed -e "1d" temp > temps
+mv temps temp
+for i in $k
+
+do
+if test -d $i
+	 then 
+	echo $i
+	cp=`pwd`
+	echo -n $cp|cat>>temp	
+	echo -n "/"|cat>>temp
+	echo -n $i|cat>>temp
+	echo |cat>>temp
+	fi
+done

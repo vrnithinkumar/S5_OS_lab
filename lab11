@@ -1,0 +1,26 @@
+#! /bin/bash
+#############################################################################
+#                                                                           #
+#******This bash script is written by VR<vrnithinkumar@gmail.com>***********#
+#               copyright@GNU GENERAL PUBLIC LICENSE                        #			#############################################################################
+
+if [ $# -eq 0 ]
+then
+echo -e "$0 : Invalid Input.....\n You must give a integer input"
+exit 1
+fi
+case $1 in
+1) echo "January" ;;
+2) echo "February" ;;
+3) echo "March";;
+4) echo "April";;
+5) echo "May";;
+6) echo "June";;
+7) echo "July";;
+8) echo "August";;
+9) echo "September";;
+10) echo "October";;
+11) echo "November";;
+12) echo "December";;
+*) echo "Sorry..... Invalid input" ;;
+esac

@@ -1,0 +1,307 @@
+General Information
+===================
+The cross compilers are installed in all systems in 
+Software Systems Laboratory.
+
+The cross compilers are needed if you are installing
+Nachos in your home computers.
+
+On a Red-Hat machine, they can be installed as follows
+	rpm -ivh <file-name>.rpm
+
+On Debian machines, you can use the .deb files by issuing
+	dpkg -i <file-name>.deb
+
+Introduction to Nachos
+======================
+Nachos runs on a simlated machine which understands MIPS.
+
+Since we have a simulator, one might thing that the kernel is also running on
+the simulator. But it is not so. In a linux system the Nachos kernel (that the
+student writes) as well as the simulator is a user level process.
+The simulator reads in the user test program executable as the data and
+interprets them, simulating their execution on a real MIPS machine.
+The user programs are written in a subset of C. 
+
+Nachos executable contains both the simulator and the kernel. The simulated
+machine's physical memory and registers are the data structures in Nachos
+program. Thus the Nachos and the simulator runs side-by-side. 
+
+Whenever an interrupt or a system call occurs in the user program, the 
+simulator handles the control over to Nachos kernel.
+
+Unlike the ordinary OS, user programs (executing in Nachos Kernel) will
+execute as multiple independent threads, each having a separate stack. Thread
+switching happens via a call to low-level assembly code called SWITCH written
+in threads/switch.s
+
+Working with Nachos
+===================
+To compile Nachos 
+1. Go to code/
+2. Type make
+
+You can make the executables for the files in code/test by doing "make" in 
+that directory.
+
+Nachos executables will be created in the directories network/  threads/   vm/ 
+filesys/ userprog/. Based on the stage in which you are currently working, 
+cd to the directory and execute nachos.
+
+Read threads/main.cc to understand the command line options supported by Nachos.
+Read the Makefile.* in the Nachos directory to see how the source is compiled.
+
+Compiling
+=========
+The Nachos code directory includes several subdirectories with source code 
+for different pieces of the Nachos system. The subdirectories include 
+Makefiles that allow you to automatically build the right
+components for specific assignments using the make command.
+
+Most relevant directories will be threads/ and userprog/ 
+
+If you type make in one of these directories, it will execute a sequence of
+commands to compile and link Nachos, yielding an executable program called 
+nachos in that directory. 
+
+All of your testing will be done by running these nachos executables built 
+from your modified Nachos code. You should study the Makefiles to understand 
+how dependency identification and recompilation work.
+
+The dependency information determines which .cc files are rebuilt when a given
+.h file changes. The dependency lines in each subdirectory’s Makefile (e.g.,
+nachos/threads/Makefile) are created automatically using the make depend 
+facility. 
+
+For example, if you type cd threads; make depend, 
+this will regenerate the dependency information in the threads/Makefile . It 
+is extremely important to keep your dependency information up to date.
+
+Debugging
+=========
+1. Use printf
+2. Standard debuggers like gdb
+3. Use DEBUG primitive provided by Nachos.
+
+Searching
+=========
+1. Doxygen pages for nachos 3.4 is available at Athena. Search facility is 
+   available there.
+2. One can also use grep to search for strings in a directory tree.
+   Eg: 
+   $  pwd
+   /home/guest/nachos-3.4
+   $  grep -nr DEBUG code/
+
+   ... shows all files in the directory code/ that contains DEBUG along with 
+   their line numbers. This is very useful sometimes.
+
+Known Issues
+============
+1. Compilation can show weired errors if you are running make from an NTFS/FAT
+   filesystem. Better compile the source from a ext2/3/4 partition.
+
+Some useful links
+=================
+http://people.cs.uchicago.edu/~odonnell/OData/Courses/CS230/NACHOS/
+http://www.cs.duke.edu/~chase/cps110-archive/nachos-guide/
+http://www.cs.washington.edu/homes/tom/cs162sp95/
+http://cseweb.ucsd.edu/classes/fa00/cse120/
+
+A note on adding system calls
+=============================
+Suppose we want to add a system call "void Print(char*)" which can print
+a string passed as argument.
+
+To achieve this we need to perform the following:
+
+1. User programs must be able to access this system call. Just as Halt()
+   system call is defined in userprog/syscall.h, Print() must also be defined
+   there.
+   
+   Every system call has a number associated with it. They are defined at the 
+   beginning of this file.
+   
+   #define SC_Halt         0
+   #define SC_Exit         1
+   #define SC_Exec         2
+   #define SC_Join         3
+   #define SC_Create       4
+   #define SC_Open         5
+   #define SC_Read         6
+   #define SC_Write        7
+   #define SC_Close        8
+   #define SC_Fork         9
+   #define SC_Yield        10
+   
+   Define the system call number for Print() by adding the following.
+
+   #define SC_Print        11
+
+   Add the following (inside the IN_ASM macro) in syscall.h
+   
+   /* Prints a string passed as argument
+    */
+
+    void Print(char* str);
+
+2. All user programs are linked with the file start.s in test during
+   compiling (Check test/Makefile). So an entry for our new system call 
+   must be added in start.s. (Note that syscall.h is #included in this
+   file.)
+
+   This can be done by adding
+
+		.globl Print
+		.ent    Print
+	Print:
+		addiu $2,$0,SC_Print
+		syscall
+		j       $31
+		.end Print
+
+3. Now, edit the function ExceptionHandler() in exception.cc where we write the 
+   action to be taken when the system call is invoked.
+   As of now, the main part of ExceptionHandler() contains
+
+     if ((which == SyscallException) && (type == SC_Halt)) {
+        DEBUG('a', "Shutdown, initiated by user program.\n");
+         interrupt->Halt();
+     } else {
+         printf("Unexpected user mode exception %d %d\n", which, type);
+         ASSERT(FALSE);
+     }
+
+   Change this to:
+
+    switch(which)
+    {
+        case SyscallException:
+            switch(type)
+            {
+                case SC_Halt:
+                         DEBUG('a', "Shutdown, initiated by user program.\n");
+                         interrupt->Halt();
+                         break;
+
+                default:
+                        printf("Unknown/Unimplemented system call %d!", type);
+                        ASSERT(FALSE); // Should never happen
+                        break;
+            } // End switch(type)
+	break; // End case SyscallException
+
+        default:
+                printf("Unexpected user mode exception %d %d\n", which, type);
+                ASSERT(FALSE);
+		break;
+    }
+
+4. Read the comments written in ExceptionHandler() in exception.cc
+
+  // And don't forget to increment the pc before returning. (Or else you'll
+  // loop making the same system call forever!)
+
+   So, we write the following function to increment PC ...
+
+	void updatePC(){
+
+		// Note that we have to maintain three PC registers, 
+		// namely : PCReg, NextPCReg, PrevPCReg. 
+		// (See machine/machine.cc, machine/machine.h) for more details.
+		int pc, nextpc, prevpc;
+
+		// Read PCs
+		prevpc = machine->ReadRegister(PrevPCReg);
+		pc = machine->ReadRegister(PCReg);
+		nextpc = machine->ReadRegister(NextPCReg);
+
+		// Update PCs
+		prevpc = pc;
+		pc = nextpc;
+		nextpc = nextpc + 4;	// PC incremented by 4 in MIPS
+
+		// Write back PCs
+		machine->WriteRegister(PrevPCReg, prevpc);
+		machine->WriteRegister(PCReg, pc);
+		machine->WriteRegister(NextPCReg, nextpc);
+	}
+	
+	... and call it at then end of system calls.
+
+	(Note: This need not be done for system calls which 
+	   require invoking SWITCH() eg: fork() system call)
+   
+5. Now add the action for Print() as a new case (after the SC_Halt switch case).
+	case SC_Print:	{
+		DEBUG('a', "Print() system call invoked \n");
+		int vaddr = machine->ReadRegister(4);
+		// This address (pointer to the string to be printed) is 
+		// the address that pointes to the user address space.
+		// Simply trying printf("%s", (char*)addr) will not work
+		// as we are now in kernel space.
+
+		// Get the string from user space.
+
+		int size = 0;
+
+		buf[BUF_SIZE - 1] = '\0';               // For safety.
+
+		do{
+			// Invoke ReadMem to read the contents from user space
+
+			machine->ReadMem(vaddr,    // Location to be read
+				sizeof(char),      // Size of data to be read
+				(int*)(buf+size)   // where the read contents 
+				);                 // are stored
+
+			// Compute next address
+			vaddr+=sizeof(char);    size++;
+
+		} while( size < (BUF_SIZE - 1) && buf[size-1] != '\0');
+
+		size--;
+		DEBUG('a', "Size of string = %d", size);
+
+		printf("%s", buf);
+		bzero(buf, sizeof(char)*BUF_SIZE);  // Zeroing the buffer.
+		updatePC();
+	}
+	break; // SC_Print
+
+	Character array buf is used as a buffer and its size is BUF_SIZE. 
+	It must be declared before using.
+
+6. Test:
+  
+  Write a test program print.c in test/ directory.
+  
+  print.c
+  =======
+
+  #include "syscall.h"
+  void main()
+  {
+    Print("Hello World\n");
+    Halt();	// Optional. Just print stats
+  }
+  
+  To compile your program, change the Makefile
+  1. Add "print" to the variable USERPROG
+  2. Then add
+	print.o: print.c
+		$(CC) $(CFLAGS) -c print.c
+	print: print.o start.o
+		$(LD) $(LDFLAGS) start.o print.o -o print.coff
+		../bin/coff2noff print.coff print
+
+  3. To build your program, type
+    user@nitc:~$   make print
+
+  And finally to test, execute nachos in userprog/ directory
+    user@nitc:~$   ./nachos -x ../test/print
+
+	*=========================================================*
+	|     Please report your queries and suggestions to 	  |
+	| said@nitc.ac.in, subha@nitc.ac.in, jayarajpb@nitc.ac.in |
+	*=========================================================*

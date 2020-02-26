@@ -1,0 +1,39 @@
+#!/bin/bash
+#############################################################################
+#                                                                           #
+#******This bash script is written by VR<vrnithinkumar@gmail.com>***********#
+#               copyright @ GNU GENERAL PUBLIC LICENSE                      #			
+#############################################################################
+if test -f temp
+then	
+	rm temp
+	touch temp
+else touch temp
+fi
+tpath="$1/temp"
+tpath1="$1/temp1"
+echo $1|cat>$tpath
+while test -s $tpath
+do
+	path=`head -1 $tpath`
+	cd $path
+	files=`ls`
+	for i in $files
+	do
+		#echo $i
+		if test -d $i
+		then 
+			echo $i
+			cp=`pwd`
+			echo -n $cp|cat>>$tpath	
+			echo -n "/"|cat>>$tpath
+			echo -n $i|cat>>$tpath
+			echo |cat>>$tpath
+		fi
+	done
+	sed -e "1d" $tpath>$tpath1
+	mv $tpath1 $tpath
+done
+rm $tpath
+
+

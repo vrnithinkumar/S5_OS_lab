@@ -1,0 +1,27 @@
+#! /bin/bash
+#############################################################################
+#                                                                           #
+#******This bash script is written by VR<vrnithinkumar@gmail.com>***********#
+#               copyright@GNU GENERAL PUBLIC LICENSE                        #			
+#############################################################################
+cd $1 
+p=`ls`
+for i in $p
+do
+if test -d $i
+then
+	echo "$i is not a file" 
+else
+if [ -s "$i" ]
+		then
+			echo "$i has some data."
+       
+		else
+			echo "$i is empty."
+        		rm $i
+        		echo "$i is removed"
+        
+	fi
+	
+fi	
+done

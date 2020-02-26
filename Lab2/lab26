@@ -1,0 +1,19 @@
+#! /bin/bash
+#############################################################################
+#                                                                           #
+#******This bash script is written by VR<vrnithinkumar@gmail.com>***********#
+#               copyright@GNU GENERAL PUBLIC LICENSE                        #			
+#############################################################################
+if test -d $1
+then
+	echo "$1 is a Directory...."
+elif test -f $1
+then
+	rm $1
+	echo "deleted File $1"
+	mkdir $1
+	echo "Created a directory $1" 
+else 	
+	mkdir $1
+	echo "Created a directory $1"	
+fi	
